@@ -28,13 +28,13 @@ class Arena {
     }
 }
 class Robot {
-    constructor(name){
+    constructor(name,heals,damage){
         this.name = name;
-        this.heals = 100;
-        this.damage = 2,5;
+        this.heals = heals;
+        this.damage = damage;
     }
-    getDamage(){
-        this.heals = this.heals - this.damage;           
+    getDamage(damage){
+        this.heals = this.heals - damage;           
     }
     giveDamage(){
         return this.damage;
@@ -46,3 +46,49 @@ class Robot {
 
 const game = new Arena();
 game.startGame();
+
+class Heavy extends Robot{
+    constructor(name) {
+        super(name,10000,30);
+        this.armor = 20;
+    }
+    getDamage(damage){
+       this.heals = this.heals - (damage * (1 - this.armor / 100));        
+    }
+}
+
+class Assault extends Robot{
+    constructor(name) {
+        super(name,10000,30);
+        this.crit = 30;
+    }
+    giveDamage(){
+        let critChance = Math.random() * 100;
+        if (critChance <= this.crit){
+            return  this.damage*2
+        }else{
+            return this.damage
+        }
+    }
+}
+
+class Light extends Robot{
+    constructor(name) {
+        super(name,10000,30);
+        this.agility = 50;
+    }
+    getDamage(damage){
+        let agilityChance = Math.random() * 100;
+        if (agilityChance <= this.agility){
+            this.heals = this.heals - damage
+        }
+    }
+}
+
+
+
+let kolya = new Heavy('kolya');
+let lenya = new Assault('lenya');
+let vanya = new Light('vanya');
+vanya.getDamage(20);
+console.log(vanya);
