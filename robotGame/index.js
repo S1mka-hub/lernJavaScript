@@ -1,7 +1,8 @@
 class Arena {
-    constructor(){
-        this.robotsOne = new Robot("Leonid");
-        this.robotsTwo = new Robot("Xerx");
+    constructor([robotsOne,robotsTwo]){
+        const factory = new RoboFactory()
+        this.robotsOne = factory.create(robotsOne.type,robotsOne.name);
+        this.robotsTwo = factory.create(robotsTwo.type,robotsTwo.name);
         this.round = 0;
     }
     startGame(){
@@ -44,13 +45,10 @@ class Robot {
     }
 }
 
-const game = new Arena();
-game.startGame();
-
 class Heavy extends Robot{
     constructor(name) {
-        super(name,10000,30);
-        this.armor = 20;
+        super(name,1500,25);
+        this.armor = 23;
     }
     getDamage(damage){
        this.heals = this.heals - (damage * (1 - this.armor / 100));        
@@ -59,8 +57,8 @@ class Heavy extends Robot{
 
 class Assault extends Robot{
     constructor(name) {
-        super(name,10000,30);
-        this.crit = 30;
+        super(name,1000,30);
+        this.crit = 50;
     }
     giveDamage(){
         let critChance = Math.random() * 100;
@@ -74,7 +72,7 @@ class Assault extends Robot{
 
 class Light extends Robot{
     constructor(name) {
-        super(name,10000,30);
+        super(name,1000,30);
         this.agility = 50;
     }
     getDamage(damage){
@@ -84,11 +82,22 @@ class Light extends Robot{
         }
     }
 }
-
-
-
-let kolya = new Heavy('kolya');
-let lenya = new Assault('lenya');
-let vanya = new Light('vanya');
-vanya.getDamage(20);
-console.log(vanya);
+class RoboFactory {
+    static type = {
+        h:Heavy,
+        a:Assault,
+        l:Light,
+    }
+    create(type,name){
+        const Robo = RoboFactory.type[type]
+        const robo = new Robo(name);
+        return robo;
+    }
+}
+const players = [
+    {type:'a', name:'Kolya'},
+    {type:'h', name:'Vasya'}
+]
+const a = new Arena(players)
+a.startGame()
+console.log(a);
